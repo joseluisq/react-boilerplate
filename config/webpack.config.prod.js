@@ -1,15 +1,18 @@
-const path = require('path')
-const webpack = require('webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const ManifestPlugin = require('webpack-manifest-plugin')
+const Path = require('path')
+const Webpack = require('webpack')
+const ExtractPlugin = require('extract-text-webpack-plugin')
+const HtmlPlugin = require('html-webpack-plugin')
+const Manifest = require('webpack-manifest-plugin')
+const ChunkManifest = require('chunk-manifest-webpack-plugin')
+const Gzip = require('compression-webpack-plugin')
 
 module.exports = {
-  entry: './src/app.js',
+  entry: {
+    app: './src/app.js'
+  },
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'static/js/[name].[chunkhash:8].js',
-    chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js'
+    filename: '[name].[chunkhash:8].js',
+    path: Path.resolve(__dirname, '../dist')
   },
   devtool: false,
   module: {
@@ -22,7 +25,7 @@ module.exports = {
       },
       {
         test: /\.(js|jsx)$/,
-        exclude: [path.resolve(__dirname, 'node_modules')],
+        exclude: [Path.resolve(__dirname, 'node_modules')],
         loader: 'babel-loader',
         options: {
           presets: ['es2015', 'react']
@@ -30,16 +33,16 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        exclude: path.resolve(__dirname, './src/app'),
-        loader: ExtractTextPlugin.extract({
+        exclude: Path.resolve(__dirname, './src/app'),
+        loader: ExtractPlugin.extract({
           loader: ['css-loader', 'postcss-loader'],
           fallbackLoader: 'style-loader'
         })
       },
       {
         test: /\.scss$/,
-        exclude: path.resolve(__dirname, './src/app'),
-        loader: ExtractTextPlugin.extract({
+        exclude: Path.resolve(__dirname, './src/app'),
+        loader: ExtractPlugin.extract({
           loader: ['css-loader', 'postcss-loader', 'sass-loader'],
           fallbackLoader: 'style-loader'
         })
@@ -68,14 +71,11 @@ module.exports = {
     ]
   },
   plugins: [
-    new webpack.DefinePlugin({
+    new Webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production'),
       '__DEVTOOLS__': false
     }),
-    new webpack.LoaderOptionsPlugin({
-      minimize: true
-    }),
-    new HtmlWebpackPlugin({
+    new HtmlPlugin({
       template: './public/index.html',
       inject: 'body',
       chunksSortMode: 'dependency',
@@ -92,13 +92,27 @@ module.exports = {
         minifyURLs: true
       }
     }),
-    new webpack.NoEmitOnErrorsPlugin(),
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    new ExtractTextPlugin({
-      filename: 'static/css/[name].[contenthash:8].css'
+    new ExtractPlugin({
+      filename: 'static/css/[name].[chunkhash:8].css'
     }),
-    new ManifestPlugin({
-      fileName: 'asset-manifest.json'
+    new Webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks: module => {
+        // this assumes your vendor imports exist in the node_modules directory
+        return module.context && module.context.indexOf('node_modules') !== -1
+      }
+    }),
+    new Manifest(),
+    new ChunkManifest({
+      filename: 'chunk-manifest.json',
+      manifestVariable: '__CHUNKS__'
+    }),
+    new Webpack.NoEmitOnErrorsPlugin(),
+    new Webpack.optimize.OccurrenceOrderPlugin(),
+    new Gzip({
+      asset: '{file}.gz',
+      algorithm: 'gzip',
+      regExp: /\.js$|\.css$/
     })
   ],
   node: {
