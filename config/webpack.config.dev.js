@@ -1,25 +1,61 @@
-const path = require('path')
+const { resolve } = require('path')
+const Webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
+const port = process.env.APP_PORT || 8080
+
 module.exports = {
-  entry: './src/app.js',
+  entry: [
+    'react-hot-loader/patch',
+    // activate HMR for React
+
+    `webpack-dev-server/client?http://localhost:${port}`,
+    // bundle the client for webpack-dev-server
+    // and connect to the provided endpoint
+
+    'webpack/hot/only-dev-server',
+    // bundle the client for hot reloading
+    // only- means to only hot reload for successful updates
+
+    './src/app.js'
+    // the entry point of our app
+  ],
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    // the output bundle
+    path: resolve(__dirname, 'dist'),
+    publicPath: '/'
   },
-  devtool: 'source-map',
+  devtool: 'eval',
+  node: {
+    fs: 'empty'
+  },
+
+  devServer: {
+    hot: true,
+    // enable HMR on the server
+
+    contentBase: resolve(__dirname, 'dist'),
+    // match the output path
+
+    port: port,
+
+    publicPath: '/'
+    // match the output `publicPath`
+  },
+
   module: {
     rules: [
       {
         test: /\.js$/,
         enforce: 'pre',
-        use: { loader: 'eslint-loader' },
+        use: ['eslint-loader'],
         exclude: /node_modules/
       },
       {
         test: /\.(js|jsx)$/,
-        exclude: [path.resolve(__dirname, 'node_modules')],
+        exclude: [resolve(__dirname, 'node_modules')],
         use: {
           loader: 'babel-loader',
           options: {
@@ -69,12 +105,15 @@ module.exports = {
       }
     ]
   },
+
   plugins: [
+    new Webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       template: './public/index.html'
     }),
     new ExtractTextPlugin({
       filename: 'static/css/[name].[contenthash:8].css'
-    })
+    }),
+    new Webpack.NamedModulesPlugin()
   ]
 }
