@@ -1,18 +1,17 @@
-const Path = require('path')
+const { resolve } = require('path')
 const Webpack = require('webpack')
 const ExtractPlugin = require('extract-text-webpack-plugin')
 const HtmlPlugin = require('html-webpack-plugin')
 const Manifest = require('webpack-manifest-plugin')
 const ChunkManifest = require('chunk-manifest-webpack-plugin')
-const Gzip = require('compression-webpack-plugin')
 
 module.exports = {
   entry: {
-    app: './src/app.js'
+    app: './src/main.js'
   },
   output: {
     filename: '[name].[chunkhash:8].js',
-    path: Path.resolve(__dirname, '../dist')
+    path: resolve(__dirname, '../dist')
   },
   devtool: false,
   module: {
@@ -25,15 +24,12 @@ module.exports = {
       },
       {
         test: /\.(js|jsx)$/,
-        exclude: [Path.resolve(__dirname, 'node_modules')],
-        loader: 'babel-loader',
-        options: {
-          presets: ['es2015', 'react']
-        }
+        exclude: [resolve(__dirname, 'node_modules')],
+        loader: 'babel-loader'
       },
       {
         test: /\.css$/,
-        exclude: Path.resolve(__dirname, './src/app'),
+        exclude: resolve(__dirname, './src/main'),
         loader: ExtractPlugin.extract({
           loader: ['css-loader', 'postcss-loader'],
           fallbackLoader: 'style-loader'
@@ -41,7 +37,7 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        exclude: Path.resolve(__dirname, './src/app'),
+        exclude: resolve(__dirname, './src/app'),
         loader: ExtractPlugin.extract({
           loader: ['css-loader', 'postcss-loader', 'sass-loader'],
           fallbackLoader: 'style-loader'
@@ -98,7 +94,6 @@ module.exports = {
     new Webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       minChunks: module => {
-        // this assumes your vendor imports exist in the node_modules directory
         return module.context && module.context.indexOf('node_modules') !== -1
       }
     }),
@@ -108,12 +103,7 @@ module.exports = {
       manifestVariable: '__CHUNKS__'
     }),
     new Webpack.NoEmitOnErrorsPlugin(),
-    new Webpack.optimize.OccurrenceOrderPlugin(),
-    new Gzip({
-      asset: '{file}.gz',
-      algorithm: 'gzip',
-      regExp: /\.js$|\.css$/
-    })
+    new Webpack.optimize.OccurrenceOrderPlugin()
   ],
   node: {
     fs: 'empty',

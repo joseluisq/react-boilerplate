@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import './hello.css'
-import './hello.scss'
+import './style.css'
+import './style.scss'
 import logo from './logo.svg'
 
-class Hello extends Component {
+class App extends Component {
 
   render () {
     return (
@@ -13,7 +13,7 @@ class Hello extends Component {
             <img src={logo} />
           </a>
           <p className='desc'>
-            This is a <strong>&lt;Hello /&gt;</strong> component.
+            This is a <strong>&lt;App /&gt;</strong> component.
           </p>
         </div>
       </div>
@@ -22,4 +22,4 @@ class Hello extends Component {
 
 }
 
-export default Hello
+export default App
