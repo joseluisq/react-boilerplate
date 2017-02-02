@@ -5,9 +5,9 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Hello from './components/hello'
+import App from './components/app'
 
 ReactDOM.render(
-  <Hello />,
+  <App />,
   document.getElementById('root')
 )

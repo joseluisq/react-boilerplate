@@ -7,42 +7,38 @@ const port = process.env.APP_PORT || 8080
 
 module.exports = {
   entry: [
-    'react-hot-loader/patch',
-    // activate HMR for React
-
-    `webpack-dev-server/client?http://localhost:${port}`,
     // bundle the client for webpack-dev-server
     // and connect to the provided endpoint
+    `webpack-dev-server/client?http://localhost:${port}`,
 
-    'webpack/hot/only-dev-server',
     // bundle the client for hot reloading
     // only- means to only hot reload for successful updates
+    'webpack/hot/only-dev-server',
 
-    './src/app.js'
     // the entry point of our app
+    './src/main.js'
   ],
   output: {
     filename: 'bundle.js',
-    // the output bundle
     path: resolve(__dirname, 'dist'),
     publicPath: '/'
   },
-  devtool: 'eval',
+  devtool: '#eval',
   node: {
     fs: 'empty'
   },
 
   devServer: {
-    hot: true,
     // enable HMR on the server
+    hot: true,
 
-    contentBase: resolve(__dirname, 'dist'),
     // match the output path
+    contentBase: resolve(__dirname, 'dist'),
 
     port: port,
 
-    publicPath: '/'
     // match the output `publicPath`
+    publicPath: '/'
   },
 
   module: {
@@ -57,10 +53,7 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: [resolve(__dirname, 'node_modules')],
         use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['es2015', 'react']
-          }
+          loader: 'babel-loader'
         }
       },
       {
