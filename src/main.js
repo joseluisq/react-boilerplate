@@ -1,13 +1,6 @@
-/**
- * This is the development entry app
- * Try: npm start
- */
-
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { render } from 'react-dom'
+import './styles/global.css'
 import App from './components/app'
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('root')
-)
+render(<App />, document.getElementById('root'))

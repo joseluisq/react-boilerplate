@@ -11,7 +11,7 @@ module.exports = {
   },
   output: {
     filename: '[name].[chunkhash:8].js',
-    path: resolve(__dirname, '../dist')
+    path: resolve(__dirname, 'dist')
   },
   devtool: false,
   module: {
@@ -31,26 +31,35 @@ module.exports = {
         test: /\.css$/,
         exclude: resolve(__dirname, './src/main'),
         loader: ExtractPlugin.extract({
-          loader: ['css-loader', 'postcss-loader'],
-          fallbackLoader: 'style-loader'
+          use: [
+            'css-loader?modules,localIdentName="[name]__[local]___[hash:base64:5]"',
+            'postcss-loader'
+          ],
+          fallback: 'style-loader'
         })
       },
       {
-        test: /\.scss$/,
+        test: /\.(scss|sass)$/,
         exclude: resolve(__dirname, './src/app'),
         loader: ExtractPlugin.extract({
-          loader: ['css-loader', 'postcss-loader', 'sass-loader'],
-          fallbackLoader: 'style-loader'
+          use: [
+            'css-loader?modules,localIdentName="[name]__[local]___[hash:base64:5]"',
+            'postcss-loader',
+            'sass-loader'
+          ],
+          fallback: 'style-loader'
         })
       },
       {
         test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)(\?.*$|$)/,
-        use: [{
-          loader: 'file-loader',
-          options: {
-            name: 'static/media/[name].[hash:8].[ext]'
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: 'static/media/[name].[hash:8].[ext]'
+            }
           }
-        }]
+        ]
       },
       {
         test: /\.(mp4|webm|wav|mp3|m4a|aac|oga)(\?.*)?$/,
@@ -69,7 +78,7 @@ module.exports = {
   plugins: [
     new Webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production'),
-      '__DEVTOOLS__': false
+      __DEVTOOLS__: false
     }),
     new HtmlPlugin({
       template: './public/index.html',
