@@ -5,13 +5,16 @@ const HtmlPlugin = require('html-webpack-plugin')
 const Manifest = require('webpack-manifest-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
+const dist = resolve(__dirname, 'dist')
+const src = resolve(__dirname, 'src')
+
 module.exports = {
   entry: {
-    app: './src/main.js'
+    app: resolve(src, 'main.js')
   },
   output: {
     filename: '[name].[chunkhash:8].js',
-    path: resolve(__dirname, 'dist')
+    path: dist
   },
   devtool: false,
   module: {
@@ -29,7 +32,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        exclude: resolve(__dirname, './src/main'),
+        exclude: resolve(src, 'main'),
         loader: ExtractPlugin.extract({
           use: [
             'css-loader?modules,localIdentName="[name]__[local]___[hash:base64:5]"',
@@ -40,7 +43,7 @@ module.exports = {
       },
       {
         test: /\.(scss|sass)$/,
-        exclude: resolve(__dirname, './src/app'),
+        exclude: resolve(src, 'main'),
         loader: ExtractPlugin.extract({
           use: [
             'css-loader?modules,localIdentName="[name]__[local]___[hash:base64:5]"',
@@ -81,7 +84,7 @@ module.exports = {
       __DEVTOOLS__: false
     }),
     new HtmlPlugin({
-      template: './src/index.html',
+      template: resolve(src, 'index.html'),
       inject: 'body',
       chunksSortMode: 'dependency',
       minify: {
@@ -111,16 +114,16 @@ module.exports = {
     }),
     new CopyWebpackPlugin([
       {
-        from: resolve(__dirname, 'src/manifest.json'),
-        to: resolve(__dirname, 'dist/manifest.json')
+        from: resolve(src, 'manifest.json'),
+        to: resolve(dist, 'manifest.json')
       },
       {
-        from: resolve(__dirname, 'src/assets/favicon.ico'),
-        to: resolve(__dirname, 'dist/favicon.ico')
+        from: resolve(src, 'assets/favicon.ico'),
+        to: resolve(dist, 'favicon.ico')
       },
       {
-        from: resolve(__dirname, 'src/assets/icons'),
-        to: resolve(__dirname, 'dist/assets/icons')
+        from: resolve(src, 'assets/icons'),
+        to: resolve(dist, 'assets/icons')
       }
     ]),
     new Webpack.NoEmitOnErrorsPlugin(),
