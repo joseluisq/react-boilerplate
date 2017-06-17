@@ -5,18 +5,16 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const DashboardPlugin = require('webpack-dashboard/plugin')
 
 const port = process.env.APP_PORT || 8080
+const dist = resolve(__dirname, 'dist')
+const src = resolve(__dirname, 'src')
 
 module.exports = {
   entry: {
-    app: [
-      'babel-polyfill',
-      'react-hot-loader/patch',
-      './src/main.js'
-    ]
+    app: ['babel-polyfill', 'react-hot-loader/patch', resolve(src, 'main.js')]
   },
   output: {
     filename: 'bundle.js',
-    path: resolve(__dirname, 'dist'),
+    path: dist,
     publicPath: '/'
   },
   devtool: 'eval',
@@ -25,15 +23,9 @@ module.exports = {
   },
 
   devServer: {
-    // enable HMR on the server
     hot: true,
-
-    // match the output path
-    contentBase: resolve(__dirname, 'dist'),
-
+    contentBase: src,
     port: port,
-
-    // match the output `publicPath`
     publicPath: '/',
     historyApiFallback: true,
     disableHostCheck: true,
@@ -115,7 +107,7 @@ module.exports = {
     new Webpack.HotModuleReplacementPlugin(),
     new DashboardPlugin(),
     new HtmlWebpackPlugin({
-      template: './src/index.html'
+      template: resolve(src, './index.html')
     }),
     new ExtractTextPlugin({
       filename: 'assets/css/[name].[contenthash:8].css'
