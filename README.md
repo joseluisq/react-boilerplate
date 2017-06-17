@@ -6,8 +6,8 @@ __Status:__ In development...
 
 ## Features
 
-- [x] [Webpack 2](https://webpack.js.org/) with [Hot Module Replacement](https://webpack.js.org/guides/hmr-react/).
-- [x] [React](https://facebook.github.io/react/) v15.6.
+- [x] [Webpack 2](https://webpack.js.org/).
+- [x] [React](https://facebook.github.io/react/) `v15.6` with [React Hot Loader 3](https://github.com/gaearon/react-hot-loader).
 - [x] [CSS Modules](https://github.com/gajus/babel-plugin-react-css-modules) and [Sass](https://github.com/jtangelder/sass-loader) support.
 - [x] [ESLint](http://eslint.org/) with [Standard](http://standardjs.com/).
 - [x] [PostCSS](https://github.com/postcss/postcss-loader) with [Autoprefixer](https://github.com/postcss/autoprefixer).

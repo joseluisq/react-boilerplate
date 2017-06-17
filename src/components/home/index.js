@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import css from './style.css'
-import sass from './style.sass'
+import style from './style.sass'
 import logo from './logo.svg'
 
 export default class Home extends Component {
@@ -8,9 +7,9 @@ export default class Home extends Component {
     return (
       <div>
         <a href='https://webpack.js.org/' target='_blank'>
-          <img src={logo} className={css.block} />
+          <img src={logo} className={style.block} />
         </a>
-        <p className={sass.text}>
+        <p className={style.text}>
           This is an <strong>&lt;App /&gt;</strong> component!
         </p>
       </div>

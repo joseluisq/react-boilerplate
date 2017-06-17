@@ -1,6 +1,22 @@
 import React from 'react'
-import { render } from 'react-dom'
+import ReactDOM from 'react-dom'
+import { AppContainer } from 'react-hot-loader'
 import './styles/global.css'
 import App from './components/app'
 
-render(<App />, document.getElementById('root'))
+const render = Component => {
+  ReactDOM.render(
+    <AppContainer>
+      <App />
+    </AppContainer>,
+    document.getElementById('root')
+  )
+}
+
+render(App)
+
+if (module.hot) {
+  module.hot.accept('./components/app', () => {
+    render(App)
+  })
+}

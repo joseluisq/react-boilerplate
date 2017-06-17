@@ -3,7 +3,7 @@ const Webpack = require('webpack')
 const ExtractPlugin = require('extract-text-webpack-plugin')
 const HtmlPlugin = require('html-webpack-plugin')
 const Manifest = require('webpack-manifest-plugin')
-const ChunkManifest = require('chunk-manifest-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   entry: {
@@ -17,7 +17,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|jsx)$/,
         enforce: 'pre',
         use: { loader: 'eslint-loader' },
         exclude: /node_modules/
@@ -56,7 +56,7 @@ module.exports = {
           {
             loader: 'file-loader',
             options: {
-              name: 'static/media/[name].[hash:8].[ext]'
+              name: 'assets/media/[name].[hash:8].[ext]'
             }
           }
         ]
@@ -66,7 +66,7 @@ module.exports = {
         loader: 'url',
         query: {
           limit: 10000,
-          name: 'static/media/[name].[hash:8].[ext]'
+          name: 'assets/media/[name].[hash:8].[ext]'
         }
       },
       {
@@ -81,7 +81,7 @@ module.exports = {
       __DEVTOOLS__: false
     }),
     new HtmlPlugin({
-      template: './public/index.html',
+      template: './src/index.html',
       inject: 'body',
       chunksSortMode: 'dependency',
       minify: {
@@ -98,19 +98,31 @@ module.exports = {
       }
     }),
     new ExtractPlugin({
-      filename: 'static/css/[name].[chunkhash:8].css'
+      filename: 'assets/css/[name].[chunkhash:8].css',
+      allChunks: true
     }),
     new Webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      minChunks: module => {
-        return module.context && module.context.indexOf('node_modules') !== -1
+      async: false,
+      children: true,
+      minChunks: 3
+    }),
+    new Manifest({
+      fileName: 'chunk-manifest.json'
+    }),
+    new CopyWebpackPlugin([
+      {
+        from: resolve(__dirname, 'src/manifest.json'),
+        to: resolve(__dirname, 'dist/manifest.json')
+      },
+      {
+        from: resolve(__dirname, 'src/assets/favicon.ico'),
+        to: resolve(__dirname, 'dist/favicon.ico')
+      },
+      {
+        from: resolve(__dirname, 'src/assets/icons'),
+        to: resolve(__dirname, 'dist/assets/icons')
       }
-    }),
-    new Manifest(),
-    new ChunkManifest({
-      filename: 'chunk-manifest.json',
-      manifestVariable: '__CHUNKS__'
-    }),
+    ]),
     new Webpack.NoEmitOnErrorsPlugin(),
     new Webpack.optimize.OccurrenceOrderPlugin()
   ],
