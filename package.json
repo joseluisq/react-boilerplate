@@ -1,7 +1,7 @@
 {
   "name": "react-minimal-boilerplate",
   "private": true,
-  "description": "A minimal React boilerplate",
+  "description": "Another minimal React boilerplate",
   "repository": "joseluisq/webpack-boilerplate",
   "author": {
     "name": "José Luis Quintana",
