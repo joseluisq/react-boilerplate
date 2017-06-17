@@ -64,7 +64,7 @@ module.exports = {
         test: /\.css$/,
         loaders: [
           'style-loader',
-          'css-loader?importLoader=1&modules&localIdentName=[name]__[local]___[hash:base64:5]',
+          'css-loader?importLoader=1&localIdentName=[name]__[local]___[hash:base64:5]',
           'postcss-loader?sourceMap=inline'
         ]
       },
