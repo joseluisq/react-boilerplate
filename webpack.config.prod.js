@@ -35,7 +35,7 @@ module.exports = {
         exclude: resolve(src, 'main'),
         loader: ExtractPlugin.extract({
           use: [
-            'css-loader?modules,localIdentName="[name]__[local]___[hash:base64:5]"',
+            'css-loader?localIdentName="[name]__[local]___[hash:base64:5]"',
             'postcss-loader'
           ],
           fallback: 'style-loader'
