@@ -79,6 +79,9 @@ module.exports = {
     ]
   },
   plugins: [
+    new Webpack.LoaderOptionsPlugin({
+      minimize: true
+    }),
     new Webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production'),
       __DEVTOOLS__: false
@@ -126,6 +129,45 @@ module.exports = {
         to: resolve(dist, 'assets/icons')
       }
     ]),
+    new Webpack.optimize.UglifyJsPlugin({
+      output: {
+        comments: false
+      },
+      mangle: true,
+      compress: {
+        unsafe_comps: true,
+        properties: true,
+        keep_fargs: false,
+        pure_getters: true,
+        collapse_vars: true,
+        unsafe: true,
+        warnings: false,
+        screw_ie8: true,
+        sequences: true,
+        dead_code: true,
+        drop_debugger: true,
+        comparisons: true,
+        conditionals: true,
+        evaluate: true,
+        booleans: true,
+        loops: true,
+        unused: true,
+        hoist_funs: true,
+        if_return: true,
+        join_vars: true,
+        cascade: true,
+        drop_console: false,
+        pure_funcs: [
+          'classCallCheck',
+          '_classCallCheck',
+          '_possibleConstructorReturn',
+          'Object.freeze',
+          'invariant',
+          'warning'
+        ]
+      }
+    }),
+    new Webpack.optimize.AggressiveMergingPlugin(),
     new Webpack.NoEmitOnErrorsPlugin(),
     new Webpack.optimize.OccurrenceOrderPlugin()
   ],
