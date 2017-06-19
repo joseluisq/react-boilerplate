@@ -64,7 +64,7 @@ module.exports = {
         test: /\.css$/,
         loaders: [
           'style-loader',
-          'css-loader?importLoader=1&localIdentName=[name]__[local]___[hash:base64:5]',
+          'css-loader?importLoader=1&localIdentName=[name]__[local]__[hash:base64:5]',
           'postcss-loader?sourceMap=inline'
         ]
       },
@@ -72,7 +72,7 @@ module.exports = {
         test: /\.(scss|sass)$/,
         loaders: [
           'style-loader',
-          'css-loader?importLoader=1&modules&localIdentName=[name]__[local]___[hash:base64:5]',
+          'css-loader?importLoader=1&modules&localIdentName=[name]__[local]__[hash:base64:5]',
           'postcss-loader?sourceMap=inline',
           'sass-loader?sourceMap'
         ]
@@ -80,7 +80,7 @@ module.exports = {
       {
         test: /\.(ico|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)(\?.*)?$/,
         use: {
-          loader: 'file-loader',
+          loader: 'url-loader',
           options: {
             name: 'assets/media/[name].[hash:8].[ext]'
           }
@@ -110,7 +110,7 @@ module.exports = {
       template: resolve(src, './index.html')
     }),
     new ExtractTextPlugin({
-      filename: 'assets/css/[name].[contenthash:8].css'
+      filename: 'assets/[name].[contenthash:8].css'
     }),
     new Webpack.NamedModulesPlugin()
   ]
