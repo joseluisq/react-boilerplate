@@ -76,9 +76,13 @@
     ]
   },
   "eslintConfig": {
+    "parser": "babel-eslint",
     "extends": [
       "standard",
       "standard-jsx"
     ]
+  },
+  "standard": {
+    "parser": "babel-eslint"
   }
 }
