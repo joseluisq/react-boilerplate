@@ -35,7 +35,7 @@ module.exports = {
         exclude: resolve(src, 'main'),
         loader: ExtractPlugin.extract({
           use: [
-            'css-loader?localIdentName="[name]__[local]___[hash:base64:5]"',
+            'css-loader?localIdentName="[local]-[hash:base64:5]"',
             'postcss-loader'
           ],
           fallback: 'style-loader'
@@ -46,7 +46,7 @@ module.exports = {
         exclude: resolve(src, 'main'),
         loader: ExtractPlugin.extract({
           use: [
-            'css-loader?modules,localIdentName="[name]__[local]___[hash:base64:5]"',
+            'css-loader?modules,localIdentName="[local]-[hash:base64:5]"',
             'postcss-loader',
             'sass-loader'
           ],
@@ -54,19 +54,33 @@ module.exports = {
         })
       },
       {
-        test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)(\?.*$|$)/,
+        test: /\.(png|jpg|jpeg|gif|svg)$/,
         use: [
           {
-            loader: 'file-loader',
+            loader: 'url-loader',
             options: {
-              name: 'assets/media/[name].[hash:8].[ext]'
+              limit: 10000,
+              name: 'assets/images/[name].[hash:8].[ext]'
+            }
+          }
+        ]
+      },
+      {
+        test: /\.(svg|woff|woff2|ttf|eot)(\?.*$|$)/,
+        exclude: /(images|media|img)/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 10000,
+              name: 'assets/fonts/[name].[hash:8].[ext]'
             }
           }
         ]
       },
       {
         test: /\.(mp4|webm|wav|mp3|m4a|aac|oga)(\?.*)?$/,
-        loader: 'url',
+        loader: 'url-loader',
         query: {
           limit: 10000,
           name: 'assets/media/[name].[hash:8].[ext]'
@@ -104,7 +118,7 @@ module.exports = {
       }
     }),
     new ExtractPlugin({
-      filename: 'assets/css/[name].[chunkhash:8].css',
+      filename: '[name].[contenthash:8].css',
       allChunks: true
     }),
     new Webpack.optimize.CommonsChunkPlugin({
