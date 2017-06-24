@@ -68,6 +68,19 @@
     "lint": "eslint src"
   },
   "babel": {
+    "presets": [
+      [
+        "es2015",
+        {
+          "modules": false
+        }
+      ],
+      "stage-0",
+      "react"
+    ],
+    "plugins": [
+      "react-css-modules"
+    ],
     "env": {
       "production": {
         "presets": [
@@ -101,3 +114,4 @@
     "parser": "babel-eslint"
   }
 }
+
