@@ -4,6 +4,8 @@ const ExtractPlugin = require('extract-text-webpack-plugin')
 const HtmlPlugin = require('html-webpack-plugin')
 const Manifest = require('webpack-manifest-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin
 
 const dist = resolve(__dirname, 'dist')
 const src = resolve(__dirname, 'src')
@@ -93,56 +95,16 @@ module.exports = {
     ]
   },
   plugins: [
-    new Webpack.LoaderOptionsPlugin({
-      minimize: true
-    }),
     new Webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production'),
       __DEVTOOLS__: false
     }),
-    new HtmlPlugin({
-      template: resolve(src, 'index.html'),
-      inject: 'body',
-      chunksSortMode: 'dependency',
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeRedundantAttributes: true,
-        useShortDoctype: true,
-        removeEmptyAttributes: true,
-        removeStyleLinkTypeAttributes: true,
-        keepClosingSlash: true,
-        minifyJS: true,
-        minifyCSS: true,
-        minifyURLs: true
-      }
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static'
     }),
-    new ExtractPlugin({
-      filename: '[name].[contenthash:8].css',
-      allChunks: true
+    new Webpack.LoaderOptionsPlugin({
+      minimize: true
     }),
-    new Webpack.optimize.CommonsChunkPlugin({
-      async: false,
-      children: true,
-      minChunks: 3
-    }),
-    new Manifest({
-      fileName: 'chunk-manifest.json'
-    }),
-    new CopyWebpackPlugin([
-      {
-        from: resolve(src, 'manifest.json'),
-        to: resolve(dist, 'manifest.json')
-      },
-      {
-        from: resolve(src, 'assets/favicon.ico'),
-        to: resolve(dist, 'favicon.ico')
-      },
-      {
-        from: resolve(src, 'assets/icons'),
-        to: resolve(dist, 'assets/icons')
-      }
-    ]),
     new Webpack.optimize.UglifyJsPlugin({
       output: {
         comments: false
@@ -181,10 +143,68 @@ module.exports = {
         ]
       }
     }),
-    new Webpack.optimize.AggressiveMergingPlugin(),
-    new Webpack.NoEmitOnErrorsPlugin(),
-    new Webpack.optimize.OccurrenceOrderPlugin()
+    new HtmlPlugin({
+      filename: 'index.html',
+      template: resolve(src, 'index.html'),
+      inject: true,
+      compile: true,
+      minify: {
+        collapseWhitespace: true,
+        removeScriptTypeAttributes: true,
+        removeRedundantAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        removeComments: true
+      }
+    }),
+    new ExtractPlugin({
+      filename: '[name].[contenthash:8].css',
+      allChunks: true
+    }),
+    new Webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks (module, count) {
+        var context = module.context
+        return context && context.indexOf('node_modules') >= 0
+      }
+    }),
+    new Manifest({
+      fileName: 'chunk-manifest.json'
+    }),
+    new CopyWebpackPlugin([
+      {
+        from: resolve(src, 'manifest.json'),
+        to: resolve(dist, 'manifest.json')
+      },
+      {
+        from: resolve(src, 'assets/favicon.ico'),
+        to: resolve(dist, 'favicon.ico')
+      },
+      {
+        from: resolve(src, 'assets/icons'),
+        to: resolve(dist, 'assets/icons')
+      }
+    ]),
+    new Webpack.NoEmitOnErrorsPlugin()
   ],
+  stats: {
+    assets: true,
+    children: false,
+    chunks: false,
+    hash: false,
+    modules: false,
+    publicPath: false,
+    timings: true,
+    version: false,
+    warnings: true,
+    colors: {
+      green: '\u001b[32m'
+    }
+  },
+  performance: {
+    maxAssetSize: 300000,
+    maxEntrypointSize: 300000,
+    hints: 'warning'
+  },
   node: {
     fs: 'empty',
     net: 'empty',
