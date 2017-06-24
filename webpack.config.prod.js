@@ -163,8 +163,7 @@ module.exports = {
     new Webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       minChunks (module, count) {
-        var context = module.context
-        return context && context.indexOf('node_modules') >= 0
+        return module.context && module.context.indexOf('node_modules') >= 0
       }
     }),
     new Manifest({

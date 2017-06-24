@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import style from './style.sass'
-import logo from './logo.svg'
+import logo from '../../assets/images/logo.svg'
 
 export default class Home extends Component {
   render () {

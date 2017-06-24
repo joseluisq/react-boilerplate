@@ -1,8 +1,6 @@
-# react-minimal-boilerplate [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+# react-boilerplate [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
-> Another minimal [React](https://facebook.github.io/react/) boilerplate.
-
-__Status:__ Development in progress...
+> Another [React](https://facebook.github.io/react/) boilerplate.
 
 ## Features
 
@@ -11,15 +9,31 @@ __Status:__ Development in progress...
 - [x] [CSS Modules](https://github.com/gajus/babel-plugin-react-css-modules) with [Sass](https://github.com/jtangelder/sass-loader) support.
 - [x] [ESLint](http://eslint.org/) with [Standard](http://standardjs.com/).
 - [x] [PostCSS](https://github.com/postcss/postcss-loader) with [Autoprefixer](https://github.com/postcss/autoprefixer).
+- [x] [Webpack Code Spliting](https://webpack.js.org/guides/code-splitting/).
+- [x] [Webpack Dashboard](https://github.com/FormidableLabs/webpack-dashboard) for development.
+- [x] [Webpack Bundle Analyzer](https://github.com/th0r/webpack-bundle-analyzer) for production.
 - [ ] Pre-rendering and server-side rendering hydration.
 - [ ] Service Workers for offline caching powered by sw-precache.
 - [ ] Testing.
+
+[Node 6](https://nodejs.org/en/) or later is required.
 
 ## Install
 
 Clone the repository and install dependencies:
 
 ```sh
+git clone \
+  --depth 1 \
+  --single-branch \
+  --branch latest \
+  https://github.com/joseluisq/react-boilerplate.git ./my-react-stuff
+```
+_Replace `--branch` value with `latest` release tag (E.g. `latest`, `v0.1.0`, etc)_
+
+```sh
+cd ./my-react-stuff
+
 yarn
 ```
 
